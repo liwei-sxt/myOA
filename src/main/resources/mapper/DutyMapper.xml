@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxt.oa.data.DutyMapper">
+    <select id="findByBranchNo" parameterType="int" resultType="DutyInfo">
+        SELECT d.`duty_id`,d.`duty_name`,d.`duty_desc`,d.`branch_no`,d.`duty_remarks`,d.`del_flag`
+        FROM duty_info d
+        WHERE d.`del_flag`=0 AND d.`branch_no`=#{branchNo}
+    </select>
+
+    <select id="countDutyByName" parameterType="DutyInfo" resultType="_int">
+        SELECT COUNT(d.`duty_id`)
+        FROM duty_info d
+        WHERE d.`del_flag`=0 AND d.`branch_no`=#{branchNo} AND d.`duty_name`=#{dutyName}
+    </select>
+
+    <insert id="insertDutyInfo" parameterType="DutyInfo">
+        <selectKey order="BEFORE" resultType="int" keyProperty="dutyId">
+        select IFNUll(MAX(d.`duty_id`)+1,1)
+        from duty_info d
+        </selectKey>
+        INSERT INTO duty_info(duty_id,duty_name,duty_desc,branch_no,duty_remarks,del_flag)
+        VALUES(#{dutyId},
+        #{dutyName},
+        #{dutyDesc,jdbcType=VARCHAR},
+        #{branchNo},
+        #{dutyRemarks,jdbcType=VARCHAR},
+        #{delFlag})
+    </insert>
+</mapper>
